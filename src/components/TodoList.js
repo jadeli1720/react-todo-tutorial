@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../App.module.scss";
+import styles from "../App.module.scss"; // this will not register styling for some reason
 import cn from "../App";
 
 export const TodoList = ({todosArray, setTodosArray }) => {

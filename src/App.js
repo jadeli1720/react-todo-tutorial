@@ -28,49 +28,52 @@ const initialTodos = [
 
 const App = () => {
   const [todosArray, setTodosArray] = useState(initialTodos);
+
+  const toggleTodo = (todo) => {
+    setTodosArray(
+      todosArray.map(t => {
+        return t.id === todo.id ? { ...t, done: !t.done } : t;
+        //above does the same as below
+        // if(t.id === todo.id) {
+        //   //making a new version so as not to mutate the original value
+        //   return {...t, done: !t.done};
+        // } else {
+        //   return t
+        // }
+      })
+    );
+  }
+
   return (
     <div>
       <header className={styles.header}>
         <h1>TODO Tracker</h1>
       </header>
       <main className={styles.main}>
-        <TodoList todosArray={todosArray} setTodosArray={setTodosArray} />
+        <TodoList todosArray={todosArray} toggleTodo={toggleTodo} />
       </main>
     </div>
   );
 };
 
 
-const TodoList = ({ todosArray, setTodosArray }) => {
+const TodoList = ({ todosArray, toggleTodo }) => {
   return (
     <div className="todoList">
       {todosArray.map(todo => (
-        <Todo todo={todo} todosArray={todosArray} setTodosArray={setTodosArray} />
+        <Todo key={todo.id} todo={todo} todosArray={todosArray} toggleTodo={toggleTodo} />
       ))}
     </div>
   )
 };
 
-const Todo = ({todo, todosArray, setTodosArray }) => {
+const Todo = ({todo,  toggleTodo}) => {
   return (
     <div
       key={todo.id}
       // if left and right sides of the operator are true, it gives the value on the right
       className={cn(styles.todo, todo.done && styles.done)}
-      onClick={() => {
-        setTodosArray(
-          todosArray.map(t => {
-            return t.id === todo.id ? { ...t, done: !t.done } : t;
-            //above does the same as below
-            // if(t.id === todo.id) {
-            //   //making a new version so as not to mutate the original value
-            //   return {...t, done: !t.done};
-            // } else {
-            //   return t
-            // }
-          })
-        );
-      }}
+      onClick={() => toggleTodo(todo)}
     >
       {todo.text}
     </div>
