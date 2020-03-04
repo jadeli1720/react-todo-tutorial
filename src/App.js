@@ -44,25 +44,57 @@ const App = () => {
     );
   }
 
+  const [todoText, setTodoText] = useState('')
+
   return (
     <div>
       <header className={styles.header}>
         <h1>TODO Tracker</h1>
       </header>
+      <input
+        value={todoText}
+        onChange={e => {
+          e.persist();
+          setTodoText(e.target.value)
+          // console.log(e.target.value);
+        }}
+      />
+      <button onClick={() => {
+
+        setTodosArray([...todosArray,{
+            id: Date.now(),
+            text: todoText,
+            done: false,
+        }]);
+
+        //or do the bottom. Same thing
+        // const newTodo = {
+        //   id: Date.now(),
+        //   text: todoText,
+        //   done: false,
+        // };
+
+        // setTodosArray([...todosArray, newTodo])
+      }} >
+        Add
+      </button>
       <main className={styles.main}>
-        <TodoList todosArray={todosArray} toggleTodo={toggleTodo} />
+        <TodoList>
+            {todosArray.map(todo => (
+            <Todo key={todo.id} todo={todo} todosArray={todosArray} toggleTodo={toggleTodo} />
+          ))}
+        </TodoList>
       </main>
     </div>
   );
 };
 
 
-const TodoList = ({ todosArray, toggleTodo }) => {
+const TodoList = ({ children }) => {
+  // console.log("children",children)
   return (
     <div className="todoList">
-      {todosArray.map(todo => (
-        <Todo key={todo.id} todo={todo} todosArray={todosArray} toggleTodo={toggleTodo} />
-      ))}
+      {children}
     </div>
   )
 };
