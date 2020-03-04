@@ -7,10 +7,7 @@ import styles from "./App.module.scss";
 const cn = (...classNames) => classNames.filter(x => x).join(" ");
 
 // console.log("styles module objects", styles)
-// These are some sample TODO's so you don't have to add some every time the
-// page refreshes
-// This is only a sample of what this data could look like. Feel free to play
-// around with it.
+
 const initialTodos = [
   {
     id: 1,
@@ -37,30 +34,47 @@ const App = () => {
         <h1>TODO Tracker</h1>
       </header>
       <main className={styles.main}>
-        {todosArray.map(todo => (
-          <div
-            key={todo.id}
-            // if left and right sides of the operator are true, it gives the value on the right
-            className={cn(styles.todo, todo.done && styles.done)}
-            onClick={() => {
-              setTodosArray(todosArray.map(t => {
-                return t.id === todo.id ? {...t, done: !t.done} : t;
-                //above does the same as below
-                // if(t.id === todo.id) {
-                //   //making a new version so as not to mutate the original value
-                //   return {...t, done: !t.done};
-                // } else {
-                //   return t
-                // }
-              }))
-            }}
-          >
-            {todo.text}
-          </div>
-        ))}
+        <TodoList todosArray={todosArray} setTodosArray={setTodosArray} />
       </main>
     </div>
   );
 };
+
+
+const TodoList = ({ todosArray, setTodosArray }) => {
+  return (
+    <div className="todoList">
+      {todosArray.map(todo => (
+        <Todo todo={todo} todosArray={todosArray} setTodosArray={setTodosArray} />
+      ))}
+    </div>
+  )
+};
+
+const Todo = ({todo, todosArray, setTodosArray }) => {
+  return (
+    <div
+      key={todo.id}
+      // if left and right sides of the operator are true, it gives the value on the right
+      className={cn(styles.todo, todo.done && styles.done)}
+      onClick={() => {
+        setTodosArray(
+          todosArray.map(t => {
+            return t.id === todo.id ? { ...t, done: !t.done } : t;
+            //above does the same as below
+            // if(t.id === todo.id) {
+            //   //making a new version so as not to mutate the original value
+            //   return {...t, done: !t.done};
+            // } else {
+            //   return t
+            // }
+          })
+        );
+      }}
+    >
+      {todo.text}
+    </div>
+  )
+}
 
 export default App;
