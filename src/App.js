@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import styles from "./App.module.scss";
 
 //this function allows you to give multiple classnames conditionally
-//takes in any number of classnames into an array, filters and then joins them if true
+//takes in any number of classnames into an array, filter them with the identity function:
+//if (x) it's truthy/has a none empty string value, it gets to stay, else it gets taken out and is joined with a space in between
 const cn = (...classNames) => classNames.filter(x => x).join(" ");
 
 // console.log("styles module objects", styles)
@@ -39,7 +40,20 @@ const App = () => {
         {todosArray.map(todo => (
           <div
             key={todo.id}
+            // if left and right sides of the operator are true, it gives the value on the right
             className={cn(styles.todo, todo.done && styles.done)}
+            onClick={() => {
+              setTodosArray(todosArray.map(t => {
+                return t.id === todo.id ? {...t, done: !t.done} : t;
+                //above does the same as below
+                // if(t.id === todo.id) {
+                //   //making a new version so as not to mutate the original value
+                //   return {...t, done: !t.done};
+                // } else {
+                //   return t
+                // }
+              }))
+            }}
           >
             {todo.text}
           </div>
