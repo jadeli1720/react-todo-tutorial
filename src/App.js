@@ -28,6 +28,7 @@ const initialTodos = [
 
 const App = () => {
   const [todosArray, setTodosArray] = useState(initialTodos);
+  
 
   const toggleTodo = (todo) => {
     setTodosArray(
@@ -44,43 +45,34 @@ const App = () => {
     );
   }
 
-  const [todoText, setTodoText] = useState('')
+  const addTodo = (text) => {
+    if (text !== "") {
+      setTodosArray([ {
+        id: Date.now(),
+        text: text,
+        done: false,
+      }, ...todosArray,]); //put the spread operator here so new todo's show at the top
+    }
+    //or do the bottom. Same thing
+    // const newTodo = {
+    //   id: Date.now(),
+    //   text: todoText,
+    //   done: false,
+    // };
+
+    // setTodosArray([...todosArray, newTodo])
+  }
 
   return (
     <div>
       <header className={styles.header}>
         <h1>TODO Tracker</h1>
       </header>
-      <input
-        value={todoText}
-        onChange={e => {
-          e.persist();
-          setTodoText(e.target.value)
-          // console.log(e.target.value);
-        }}
-      />
-      <button onClick={() => {
 
-        setTodosArray([...todosArray,{
-            id: Date.now(),
-            text: todoText,
-            done: false,
-        }]);
-
-        //or do the bottom. Same thing
-        // const newTodo = {
-        //   id: Date.now(),
-        //   text: todoText,
-        //   done: false,
-        // };
-
-        // setTodosArray([...todosArray, newTodo])
-      }} >
-        Add
-      </button>
       <main className={styles.main}>
+        <TodoForm addTodo={addTodo} />
         <TodoList>
-            {todosArray.map(todo => (
+          {todosArray.map(todo => (
             <Todo key={todo.id} todo={todo} todosArray={todosArray} toggleTodo={toggleTodo} />
           ))}
         </TodoList>
@@ -88,7 +80,6 @@ const App = () => {
     </div>
   );
 };
-
 
 const TodoList = ({ children }) => {
   // console.log("children",children)
@@ -99,7 +90,7 @@ const TodoList = ({ children }) => {
   )
 };
 
-const Todo = ({todo,  toggleTodo}) => {
+const Todo = ({ todo, toggleTodo }) => {
   return (
     <div
       key={todo.id}
@@ -109,6 +100,36 @@ const Todo = ({todo,  toggleTodo}) => {
     >
       {todo.text}
     </div>
+  )
+}
+
+const TodoForm = ({addTodo}) => {
+  const [todoText, setTodoText] = useState('')
+  return (
+    <form
+      className={styles.todoForm}
+      onSubmit={event => {
+        event.preventDefault();
+        addTodo(todoText);
+        setTodoText('')
+      }} 
+      >
+        <input
+          className={styles.todoInput}
+          name="todo"
+          value={todoText}
+          onChange={e => {
+            e.persist();
+            setTodoText(e.target.value)
+            // console.log(e.target.value);
+          }}
+        />
+        <button type="submit"
+          className={styles.add}
+        >
+          Add
+      </button>
+    </form>
   )
 }
 
